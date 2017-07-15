@@ -1,0 +1,28 @@
+<div class="col-md-4 text-center"
+     ng-switch="vm.item.state">
+  <div ng-bind="vm.item.instancesName"></div>
+  <div ng-switch-when="SUCCESS">
+    <img class="buildStateImage" src="resources/images/successes.jpg">
+  </div>
+  <div ng-switch-when="BUILD_FAILED">
+
+    <img class="buildStateImage"
+         ng-src="resources/images/unknown.jpg"/>
+
+    <!--<div class="row" ng-repet="">
+
+      <div ng-repeat="commiter in vm.item.commiters">
+        <img class="buildStateImage"
+             ng-src="{{vm.emailToImagePath(commiter.email)}}"
+             r-default-image-src="resources/images/unknown.jpg"/>
+
+        <div ng-bind="commiter.name"></div>
+      </div>
+      <div ng-bind="vm.item.errorMessage"></div>
+    </div>-->
+  </div>
+  <div ng-switch-when="CONFIGURATION_FAILED">
+    <img class="buildStateImage" src="resources/images/warning.png">
+  </div>
+  <div ng-switch-default>Unknowen state</div>
+</div>

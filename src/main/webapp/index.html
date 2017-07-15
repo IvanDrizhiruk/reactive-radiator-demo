@@ -1,0 +1,55 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>radiator_demo</title>
+  <meta name="description" content="">
+  <meta name="theme-color" content="#000000">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <link rel="stylesheet" href="resources/bootstrap-3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="resources/css/main.css">
+</head>
+
+<body ng-app="radiatorDemoApp" ng-strict-di>
+<div class="container">
+  <div class="header" ng-cloak>
+    <p>This is your header</p>
+  </div>
+
+  <div class="well">
+
+    <div ng-cloak>
+      <div ng-controller="RBuildStateController as buildStateController">
+        <r-build-state items="buildStateController.buildStates"/>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer" ng-cloak>
+    <p>This is your footer</p>
+  </div>
+</div>
+
+<script src="resources/angular-1.5.8/angular.min.js"></script>
+
+
+<script src="app/app.module.js"></script>
+<script src="app/radiator/home.controller.js"></script>
+
+<script src="app/radiator/build-state/r-build-state-instance.directive.js"></script>
+<script src="app/radiator/build-state/r-build-state-instance.controller.js"></script>
+<script src="app/radiator/build-state/r-build-state.service.js"></script>
+<script src="app/radiator/build-state/r-build-state.directive.js"></script>
+<script src="app/radiator/build-state/r-build-state.controller.js"></script>
+<script src="app/radiator/build-state/r-default-image.directive.js"></script>
+
+<script src="app/radiator/refresher/r-refresher.service.js"></script>
+<!-- endinject -->
+<!-- endbuild -->
+
+</body>
+</html>
