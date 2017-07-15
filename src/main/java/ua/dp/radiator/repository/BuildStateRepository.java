@@ -20,7 +20,7 @@ public interface BuildStateRepository extends JpaRepository<BuildState,Long> {
 //    @Query("select buildState from BuildState buildState left join fetch buildState.commiters where buildState.id =:id")
 //    BuildState findOneWithEagerRelationships(@Param("id") Long id);
 
-//    Optional<BuildState> findOneByInstancesNameAndStateAndLastRunTimestemp(String instancesName, String state, Long lastRunTimestemp);
+    Optional<BuildState> findOneByInstancesNameAndStateAndLastRunTimestemp(String instancesName, String state, Long lastRunTimestemp);
 
 //    @Query(value = "" +
 //            "SELECT bs.ID, bs.INSTANCES_NAME, bs.STATE, bs.ERROR_MESSAGE, bs.LAST_RUN_TIMESTEMP, bs.EXTRACTING_DATE " +
