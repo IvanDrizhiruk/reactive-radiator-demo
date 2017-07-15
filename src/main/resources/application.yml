@@ -1,0 +1,78 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overriden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+spring:
+    application:
+        name: radiator
+    profiles:
+        # The commented value for `active` can be replaced with valid spring profiles to load.
+        # This will be overwritten by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
+        active: #spring.profiles.active#
+    devtools:
+        restart:
+            enabled: true
+        livereload:
+            enabled: true # we use gulp + BrowserSync for livereload
+    datasource:
+        url: jdbc:h2:file:./h2db/db/radiator;DB_CLOSE_DELAY=-1
+        name:
+        username: sa
+        password:
+    h2:
+        console:
+            enabled: true
+            path: /h2-console
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        database: H2
+        show_sql: true
+        properties:
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: true
+    mvc:
+        favicon:
+            enabled: false
+    thymeleaf:
+        mode: XHTML
+
+security:
+    basic:
+        enabled: false
+
+# ===================================================================
+# Radiator specific properties
+# ===================================================================
+
+radiator:
+    buildState:
+        cron: '*/10 * * * * *'
+        brokenSound: audio/GLASS.WAV
+        errorMessage: Build has been broken
+        emailFormat: '%s@ardas.dp.ua'
+        instances:
+            -
+                name: BUILD
+                configUrl: http://ci-cerri.devel.ardas.dp.ua:8080/job/build-frontend
+                errorMessage: Cerri front-end Build has been broken
+            -
+                name: STAGING
+                configUrl: http://jenkins-cerri.devel.ardas.dp.ua:8080/job/cerri-deploy
+                errorMessage: Cerri staging deploy has been broken
+            -
+                name: UI_TESTS
+                configUrl: http://jenkins-cerri.devel.ardas.dp.ua:8080/job/0-ci-e2e-main
+                errorMessage: Protractor tests has been broken
+        auth:
+            username: user
+            password: password
