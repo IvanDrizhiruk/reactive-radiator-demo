@@ -45,6 +45,8 @@ spring:
             enabled: false
     thymeleaf:
         mode: XHTML
+    webflux:
+        static-path-pattern: /**
 
 security:
     basic:
