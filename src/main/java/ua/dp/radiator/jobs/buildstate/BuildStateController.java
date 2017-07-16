@@ -33,7 +33,7 @@ public class BuildStateController {
                 .filter(not(this::isLastFromDB))
                 .collect(Collectors.toList());
 
-        buildStateRepository.saveAll(newBuildStatuses);
+        buildStateRepository.save(newBuildStatuses);
     }
 
     private boolean isLastFromDB(BuildState buildState) {
