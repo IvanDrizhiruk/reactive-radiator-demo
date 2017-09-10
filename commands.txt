@@ -1,0 +1,11 @@
+
+
+
+
+docker commit -m "Jenkins was updated" -a "Ivan Dryzhyruk" gifted_mccarthy isd/isd-jenkins
+
+
+docker ps
+docker images
+
+sudo docker run -p 8080:8080 -p 50000:50000 -v /home/ivan/bin/jenkins_home/:/var/jenkins_home -u root isd/isd-jenkins

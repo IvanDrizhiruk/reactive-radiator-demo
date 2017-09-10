@@ -59,20 +59,20 @@ radiator:
         cron: '*/10 * * * * *'
         brokenSound: audio/GLASS.WAV
         errorMessage: Build has been broken
-        emailFormat: '%s@ardas.dp.ua'
+        emailFormat: '%s@gmail.com'
         instances:
             -
                 name: BUILD
-                configUrl: http://ci-cerri.devel.ardas.dp.ua:8080/job/build-frontend
+                configUrl: http://localhost:8000/job/Run_me_1
                 errorMessage: Cerri front-end Build has been broken
             -
                 name: STAGING
-                configUrl: http://jenkins-cerri.devel.ardas.dp.ua:8080/job/cerri-deploy
+                configUrl: http://localhost:8000/job/Run_me_2
                 errorMessage: Cerri staging deploy has been broken
             -
                 name: UI_TESTS
-                configUrl: http://jenkins-cerri.devel.ardas.dp.ua:8080/job/0-ci-e2e-main
+                configUrl: http://localhost:8000/job/Run_me_3
                 errorMessage: Protractor tests has been broken
         auth:
-            username: user
-            password: password
+            username: ivan
+            password: secret

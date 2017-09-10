@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import ua.dp.radiator.domain.BuildState;
 import ua.dp.radiator.repository.BuildStateRepository;
 
@@ -27,9 +28,9 @@ public class BuildStateReportResource {
     }
 
     @GetMapping(value = "/report/build-states/last", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BuildState> getLastBuildStates() {
+        public Flux<BuildState> getLastBuildStates() {
         log.debug("REST request to get last BuildStates");
 
-        return buildStateRepository.findLastBuildStates();
+        return Flux.fromIterable(buildStateRepository.findLastBuildStates());
     }
 }

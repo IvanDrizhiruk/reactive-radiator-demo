@@ -4,13 +4,15 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ua.dp.radiator.client.jenkins.BuildStatusRestClient;
+import reactor.core.publisher.Mono;
+import ua.dp.radiator.client.jenkins.JenkinsRestApi;
 import ua.dp.radiator.client.jenkins.api.BuildDetails;
 import ua.dp.radiator.client.jenkins.api.Person;
 import ua.dp.radiator.config.properties.RadiatorProperties.BuildStateInstance;
 import ua.dp.radiator.domain.BuildState;
 import ua.dp.radiator.utils.DataTimeUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,51 +23,66 @@ public class BuildStateExecutor {
 
     private static final Logger LOG = LoggerFactory.getLogger(BuildStateExecutor.class);
 
-    protected BuildStatusRestClient restClient;
+    protected JenkinsRestApi jenkinsApi;
 
 //	@Value("${radiator.buildState.emailFormat}")
 //	protected String emailFormat;
 
-    public BuildStateExecutor(BuildStatusRestClient restClient) {
-        this.restClient = restClient;
+    public BuildStateExecutor(JenkinsRestApi restClient) {
+        this.jenkinsApi = restClient;
     }
 
-    public BuildState loadState(BuildStateInstance instances) {
+    public Mono<BuildState> loadState(BuildStateInstance instances) {
         String url = instances.configUrl;
         if (LOG.isDebugEnabled()) {
             LOG.debug(format("url ", url));
         }
 
-        BuildState buildState = null;
+//        BuildState buildState = null;
         try {
-            buildState = calculateState(instances, url);
+            return calculateState(instances, url);
         } catch (Exception exception) {
             LOG.error("Can not evaluate buildState");
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Error", exception);
             }
+            return Mono.error(exception);
         }
 
-        if (LOG.isInfoEnabled()) {
-            LOG.debug(format("BuildState for url %s : %s", url, buildState));
-        }
-
-        return buildState;
+//        if (LOG.isInfoEnabled()) {
+//            LOG.debug(format("BuildState for url %s : %s", url, buildState));
+//        }
+//
+//        return buildState;
     }
 
-    protected BuildState calculateState(BuildStateInstance instances, String url) {
-        int lastBuild = restClient.loadLastBuildNumber(url);
+    protected Mono<BuildState> calculateState(BuildStateInstance instances, String url) {
+        Mono<Integer> lastBuild = jenkinsApi.loadLastBuildNumber(url);
+        Mono<Integer> lastSuccessfulBuild = jenkinsApi.loadLastSuccessfulBuildNumber(url);
+        Mono<Integer> lastFailedBuild = jenkinsApi.loadLastFailedBuildNumber(url);
 
-        Long lastRunTimestemp = getLastRunTimestemp(url, lastBuild);
-        int lastSuccessfulBuild = restClient.loadLastSuccessfulBuildNumber(url, lastBuild);
-        int lastFailedBuild = restClient.loadLastFailedBuildNumber(url, 0);
+        //TODO
+//        Long lastRunTimestemp = getLastRunTimestemp(url, lastBuild);
 
+        //TODO
+        return Mono.<Integer, BuildState>zip(
+                Arrays.asList(lastBuild, lastSuccessfulBuild, lastFailedBuild),
+                buildNumbers -> prepareBuildState(instances, (Integer)buildNumbers[0], (Integer)buildNumbers[1], (Integer)buildNumbers[2]));
+    }
+
+    private BuildState prepareBuildState(BuildStateInstance instances, Integer lastBuild, Integer lastSuccessfulBuild, Integer lastFailedBuild) {
+
+        //TODO
+        Long lastRunTimestemp = null;
 
         if (lastSuccessfulBuild > lastFailedBuild) {
             return newSuccessState(instances, lastRunTimestemp);
         }
 
         if (lastFailedBuild == lastBuild && !instances.isConfigurationIssue) {
+            //TODO
+            String url = null;
+
             return newBuildFailedState(instances, url, lastFailedBuild, lastRunTimestemp);
         }
 
@@ -94,8 +111,9 @@ public class BuildStateExecutor {
         buildState.setLastRunTimestemp(lastRunTimestemp);
         buildState.setExtractingDate(DataTimeUtils.nowZonedDateTime());
 
-        BuildDetails buildDetails = restClient.loadBuildDetails(url, lastFailedBuild);
-
+        //TODO
+//        BuildDetails buildDetails = jenkinsApi.loadBuildDetails(url, lastFailedBuild);
+//
         //List<Person> culprits = extractCulprits(buildDetails);
         //List<Commiter> commiters = BuildStateUtils.calculateCommiters(culprits, emailFormat);
 
@@ -105,7 +123,7 @@ public class BuildStateExecutor {
     }
 
     private Long getLastRunTimestemp(String url, int lastBuild) {
-        BuildDetails buildDetails = restClient.loadBuildDetails(url, lastBuild);
+        BuildDetails buildDetails = jenkinsApi.loadBuildDetails(url, lastBuild);
 
         return buildDetails.timestamp;
     }

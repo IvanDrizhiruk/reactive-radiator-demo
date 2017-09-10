@@ -1,6 +1,7 @@
 package ua.dp.radiator.jobs.buildstate;
 
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import ua.dp.radiator.config.properties.RadiatorProperties;
 import ua.dp.radiator.domain.BuildState;
 import ua.dp.radiator.repository.BuildStateRepository;
@@ -28,12 +29,13 @@ public class BuildStateController {
     }
 
     public void execute() {
-        List<BuildState> newBuildStatuses = properties.buildState.instances.stream()
-                .map(executor::loadState)
-                .filter(not(this::isLastFromDB))
-                .collect(Collectors.toList());
+        Flux<BuildState> newBuildStatuses = Flux.fromIterable(properties.buildState.instances)
+                .flatMap(executor::loadState)
+                .filter(not(this::isLastFromDB));
 
-        buildStateRepository.saveAll(newBuildStatuses);
+
+        //TODO ISD blocked
+        buildStateRepository.saveAll(newBuildStatuses.toIterable());
     }
 
     private boolean isLastFromDB(BuildState buildState) {

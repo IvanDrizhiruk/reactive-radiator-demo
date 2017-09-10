@@ -24,10 +24,6 @@ public class CreateFluxTest {
         //when
         Flux<String> actual = Flux.just(element1, element2, element3);
 
-
-        actual.map
-
-
         //then
         StepVerifier.create(actual)
                 .expectNext(element1)
@@ -204,6 +200,20 @@ public class CreateFluxTest {
     }
 
     @Test
+    public void fluxShouldBeCreatedNoEventsShouldHappend() {
+        //given
+
+        //when
+        Flux<String> actual = Flux.never();
+
+        //then
+        StepVerifier.create(actual)
+                .expectSubscription()
+                .expectNoEvent(Duration.ofSeconds(1))
+                .thenCancel()
+                .verify();
+    }
+    @Test
     public void fluxWithExceptionShouldBeCreated() {
         //given
         RuntimeException exception = new RuntimeException("Some unexpected error");
@@ -213,8 +223,26 @@ public class CreateFluxTest {
 
         //then
         StepVerifier.create(actual)
-                .expectError()
+                .expectError(RuntimeException.class)
                 .verify();
 
+    }
+
+
+    @Test
+    public void fluxShouldBeCreatedwithInterval() {
+        //when
+        Flux<Long> actual = Flux.interval(Duration.ofMillis(100))
+                .take(10);
+
+        //then
+        StepVerifier.create(actual)
+                .expectSubscription()
+                .expectNoEvent(Duration.ofMillis(90))
+                .expectNext(0L)
+                .expectNoEvent(Duration.ofMillis(90))
+                .expectNext(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L)
+                .expectComplete()
+                .verify();
     }
 }
