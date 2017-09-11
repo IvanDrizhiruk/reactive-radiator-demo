@@ -1,24 +1,25 @@
 package ua.dp.radiator.client.jenkins;
 
+import static java.lang.String.format;
+
+import java.nio.charset.Charset;
+import java.util.Base64;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+
 import reactor.core.publisher.Mono;
 import ua.dp.radiator.client.auth.BasicAutorisationRestClient;
 import ua.dp.radiator.client.auth.UsarnamePasswordAuthTokenGenerator;
 import ua.dp.radiator.client.jenkins.api.BuildDetails;
 import ua.dp.radiator.config.properties.RadiatorProperties;
 import ua.dp.radiator.utils.TypeUtils;
-
-import javax.annotation.PostConstruct;
-
-import java.nio.charset.Charset;
-import java.util.Base64;
-
-import static java.lang.String.format;
 
 @Component
 public class ReactiveJenkinsRestApi implements JenkinsRestApi {
@@ -44,7 +45,8 @@ public class ReactiveJenkinsRestApi implements JenkinsRestApi {
 	}
 
 	public Mono<Integer> loadLastBuildNumber(String daseUrl) {
-		return loadInteger(daseUrl, "/lastBuild/buildNumber");
+		return loadInteger(daseUrl, "/lastBuild/buildNumber")
+				.onErrorReturn(0);
 	}
 
 	public Mono<Integer> loadLastSuccessfulBuildNumber(String daseUrl) {

@@ -6,11 +6,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import reactor.core.publisher.Flux;
 import ua.dp.radiator.domain.BuildState;
+import ua.dp.radiator.jobs.buildstate.BuildStateStreamController;
 import ua.dp.radiator.repository.BuildStateRepository;
-
-import java.util.List;
 
 /**
  * REST controller for managing BuildState.
@@ -22,15 +22,25 @@ public class BuildStateReportResource {
     private final Logger log = LoggerFactory.getLogger(BuildStateReportResource.class);
 
     private BuildStateRepository buildStateRepository;
+    private BuildStateStreamController buildStateStreamController;
 
-    public BuildStateReportResource(BuildStateRepository buildStateRepository) {
+    public BuildStateReportResource(BuildStateRepository buildStateRepository, BuildStateStreamController buildStateStreamController) {
         this.buildStateRepository = buildStateRepository;
+        this.buildStateStreamController = buildStateStreamController;
     }
 
     @GetMapping(value = "/report/build-states/last", produces = MediaType.APPLICATION_JSON_VALUE)
-        public Flux<BuildState> getLastBuildStates() {
+	public Flux<BuildState> getLastBuildStates() {
         log.debug("REST request to get last BuildStates");
 
         return Flux.fromIterable(buildStateRepository.findLastBuildStates());
     }
+
+
+	@GetMapping(value = "/report/stream/build-states", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+	public Flux<BuildState> getBuildStatesStream() {
+		log.debug("REST request to get stream of BuildStates");
+
+		return buildStateStreamController.getBuildStatusesSteram();
+	}
 }

@@ -1,11 +1,11 @@
 
 
-
-
+docker exec -i -t $$$_docker_id_$$$ bash
+docker cp hardcore_wiles:/var/jenkins_home ./
 docker commit -m "Jenkins was updated" -a "Ivan Dryzhyruk" gifted_mccarthy isd/isd-jenkins
 
 
 docker ps
 docker images
 
-sudo docker run -p 8080:8080 -p 50000:50000 -v /home/ivan/bin/jenkins_home/:/var/jenkins_home -u root isd/isd-jenkins
+sudo docker run -p 8000:8080 -p 50000:50000 -v /home/ivan/bin/jenkins_home/:/var/jenkins_home -u root isd/isd-jenkins
