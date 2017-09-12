@@ -1,22 +1,18 @@
 package ua.dp.radiator.jobs.buildstate;
 
-import com.google.common.collect.Lists;
+import static java.lang.String.format;
+
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import reactor.core.publisher.Mono;
 import ua.dp.radiator.client.jenkins.JenkinsRestApi;
-import ua.dp.radiator.client.jenkins.api.BuildDetails;
-import ua.dp.radiator.client.jenkins.api.Person;
 import ua.dp.radiator.config.properties.RadiatorProperties.BuildStateInstance;
 import ua.dp.radiator.domain.BuildState;
 import ua.dp.radiator.utils.DataTimeUtils;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.lang.String.format;
 
 @Component
 public class BuildStateExecutor {
@@ -122,26 +118,26 @@ public class BuildStateExecutor {
         return buildState;
     }
 
-    private Long getLastRunTimestemp(String url, int lastBuild) {
-        BuildDetails buildDetails = jenkinsApi.loadBuildDetails(url, lastBuild);
-
-        return buildDetails.timestamp;
-    }
-
-    private List<Person> extractCulprits(BuildDetails buildDetails) {
-        //		List<Person> culprits = buildDetails.culprits;
-        if (null == buildDetails.changeSet || null == buildDetails.changeSet.items) {
-            return Lists.newArrayList();
-        }
-
-        return buildDetails.changeSet.items.stream()
-                .collect(Collectors.toMap(
-                        item -> item.author.fullName,
-                        item -> item.author,
-                        (item1, item2) -> item1))
-                .values().stream()
-                .collect(Collectors.toList());
-    }
+//    private Long getLastRunTimestemp(String url, int lastBuild) {
+//        BuildDetails buildDetails = jenkinsApi.loadBuildDetails(url, lastBuild);
+//
+//        return buildDetails.timestamp;
+//    }
+//
+//    private List<Person> extractCulprits(BuildDetails buildDetails) {
+//        //		List<Person> culprits = buildDetails.culprits;
+//        if (null == buildDetails.changeSet || null == buildDetails.changeSet.items) {
+//            return Lists.newArrayList();
+//        }
+//
+//        return buildDetails.changeSet.items.stream()
+//                .collect(Collectors.toMap(
+//                        item -> item.author.fullName,
+//                        item -> item.author,
+//                        (item1, item2) -> item1))
+//                .values().stream()
+//                .collect(Collectors.toList());
+//    }
 
 
     private BuildState newSuccessState(BuildStateInstance instance, Long lastRunTimestemp) {

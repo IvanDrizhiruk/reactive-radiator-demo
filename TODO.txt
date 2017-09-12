@@ -1,0 +1,10 @@
+1. Load default from db
+2. Save o DB
+3. Ignore repeatable statuses
+4. Support details loading
+5. Support users loading
+6. Few sources
+
+
+
+x.1. Support Mongo db

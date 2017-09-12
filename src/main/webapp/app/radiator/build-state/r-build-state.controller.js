@@ -10,15 +10,17 @@
     function RBuildStateController ($scope, RBuildState, RRefresher) {
         var vm = this;
         vm.buildStates = [];
-        vm.loadAll = function() {
-            RBuildState.loadLastBuildStatuses()
-              .then(function (result) {
-                  vm.buildStates = result;
-            });
-        };
+        // vm.loadAll = function() {
 
-        RRefresher.registrate(vm.loadAll);
+        RBuildState.loadLastBuildStatuses(data => console.log(data))
 
-        vm.loadAll();
+        //       .then(function (result) {
+        //           vm.buildStates = result;
+        //     });
+        // };
+        //
+        // RRefresher.registrate(vm.loadAll);
+
+        // vm.loadAll();
     }
 })();

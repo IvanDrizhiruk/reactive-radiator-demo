@@ -90,6 +90,7 @@ public class ReactiveJenkinsRestApi implements JenkinsRestApi {
 				.acceptCharset(Charset.forName("US-ASCII"))
 				.retrieve()
 				.bodyToMono(String.class)
+				.onErrorReturn("0")
 				.log("webClient: ")
 				.map(TypeUtils::toIntegerOrNull);
 	}

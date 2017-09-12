@@ -2,11 +2,11 @@ package ua.dp.radiator.jobs.buildstate;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import reactor.core.publisher.DirectProcessor;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import ua.dp.radiator.config.properties.RadiatorProperties;
 import ua.dp.radiator.domain.BuildState;
 
@@ -30,11 +30,14 @@ public class BuildStateStreamController {
 //		Flux<BuildState> newBuildStatuses = Flux.fromIterable(properties.buildState.instances)
 //				.flatMap(executor::loadState)
 //				.filter(not(this::isLastFromDB));
+	}
 
-		Mono<BuildState> data = buildStateExecutor
-				.loadState(properties.buildState.instances.iterator().next());
 
-		data.subscribe(buildStatusesProcessor);
+	@Scheduled(cron="${radiator.buildState.cron}")
+	private void  executeTask() {
+		Flux.fromIterable(properties.buildState.instances)
+				.flatMap(buildStateExecutor::loadState)
+				.subscribe(data -> buildStatusesProcessor.sink().next(data));
 	}
 
 
