@@ -1,26 +1,23 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('radiatorDemoApp')
         .controller('RBuildStateController', RBuildStateController);
 
-    RBuildStateController.$inject = ['$scope', 'RBuildState', 'RRefresher'];
+    RBuildStateController.$inject = ['$scope', 'RBuildState'];
 
-    function RBuildStateController ($scope, RBuildState, RRefresher) {
+    function RBuildStateController($scope, RBuildState) {
         var vm = this;
         vm.buildStates = [];
-        // vm.loadAll = function() {
 
-        RBuildState.loadLastBuildStatuses(data => console.log(data))
-
-        //       .then(function (result) {
-        //           vm.buildStates = result;
-        //     });
-        // };
-        //
-        // RRefresher.registrate(vm.loadAll);
-
-        // vm.loadAll();
+        RBuildState.loadLastBuildStatuses(buildStates => {
+            const oldBuildStatesIndex = vm.buildStates.findIndex(value => value.instancesName === buildStates.instancesName);
+            if (-1 === oldBuildStatesIndex) {
+                vm.buildStates.push(buildStates);
+            } else {
+                vm.buildStates[oldBuildStatesIndex] = buildStates;
+            }
+        });
     }
 })();

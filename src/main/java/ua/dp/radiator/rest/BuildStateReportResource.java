@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import reactor.core.publisher.Flux;
@@ -37,7 +38,7 @@ public class BuildStateReportResource {
     }
 
 
-	@GetMapping(value = "/report/stream/build-states", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @GetMapping(path = "/report/stream/build-states", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public Flux<BuildState> getBuildStatesStream() {
 		log.debug("REST request to get stream of BuildStates");
 

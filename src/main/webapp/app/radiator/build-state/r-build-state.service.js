@@ -19,7 +19,7 @@
       var eventSource = new EventSource("/api/report/stream/build-states");
 
       eventSource.onmessage = function(e) {
-        callback(e.data);
+        callback(JSON.parse(e.data));
       };
 
       // return $http({
