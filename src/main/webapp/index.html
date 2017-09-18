@@ -23,6 +23,7 @@
 
     <div ng-cloak>
       <div ng-controller="RBuildStateController as buildStateController">
+        === {{ buildStateController.buildStates }} ===
         <r-build-state items="buildStateController.buildStates"/>
       </div>
     </div>
@@ -36,18 +37,13 @@
 
 <script src="resources/angular-1.5.8/angular.min.js"></script>
 
-
 <script src="app/app.module.js"></script>
-<script src="app/radiator/home.controller.js"></script>
-
 <script src="app/radiator/build-state/r-build-state-instance.directive.js"></script>
 <script src="app/radiator/build-state/r-build-state-instance.controller.js"></script>
 <script src="app/radiator/build-state/r-build-state.service.js"></script>
 <script src="app/radiator/build-state/r-build-state.directive.js"></script>
 <script src="app/radiator/build-state/r-build-state.controller.js"></script>
 <script src="app/radiator/build-state/r-default-image.directive.js"></script>
-
-<script src="app/radiator/refresher/r-refresher.service.js"></script>
 <!-- endinject -->
 <!-- endbuild -->
 

@@ -34,11 +34,11 @@ public class BuildState implements Serializable {
     @Column(name = "extracting_date")
     private ZonedDateTime extractingDate;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "build_state_commiter",
-//               joinColumns = @JoinColumn(name="build_states_id", referencedColumnName="ID"),
-//               inverseJoinColumns = @JoinColumn(name="commiters_id", referencedColumnName="ID"))
-//    private Set<Commiter> commiters = new HashSet<>();
+    @Column(name = "build_id")
+    private Integer buildId;
+
+    private boolean buildInProgress;
+
 
     public Long getId() {
         return id;
@@ -88,13 +88,21 @@ public class BuildState implements Serializable {
         this.extractingDate = extractingDate;
     }
 
-//    public Set<Commiter> getCommiters() {
-//        return commiters;
-//    }
-//
-//    public void setCommiters(Set<Commiter> commiters) {
-//        this.commiters = commiters;
-//    }
+    public boolean isBuildInProgress() {
+        return buildInProgress;
+    }
+
+    public void setBuildInProgress(boolean buildInProgress) {
+        this.buildInProgress = buildInProgress;
+    }
+
+    public Integer getBuildId() {
+        return buildId;
+    }
+
+    public void setBuildId(Integer buildId) {
+        this.buildId = buildId;
+    }
 
     @Override
     public boolean equals(Object o) {

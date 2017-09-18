@@ -13,6 +13,6 @@ public interface JenkinsRestApi {
 
 	Mono<Integer> loadLastFailedBuildNumber(String url);
 
-	BuildDetails loadBuildDetails(String url, Integer lastFailedBuild);
+	Mono<BuildDetails> loadBuildDetails(String url, Integer buildId);
 }
 

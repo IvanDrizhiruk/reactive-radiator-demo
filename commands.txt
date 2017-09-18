@@ -10,3 +10,12 @@ docker images
 
 sudo docker run -p 8000:8080 -p 50000:50000 -v /home/ivan/bin/jenkins_home/:/var/jenkins_home -u root isd/isd-jenkins
 docker run -p 8000:8080 -p 50000:50000 -v /home/idryzhyruk/workspace/reactive-radiator-demo/jenkins_home/:/var/jenkins_home isd/isd-jenkins
+
+
+
+
+
+if [ "$successful" = false ] ; then
+    echo 'Something go wrong!!!'
+    exit 1
+fi

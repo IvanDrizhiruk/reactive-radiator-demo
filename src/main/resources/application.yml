@@ -56,7 +56,7 @@ security:
 
 radiator:
     buildState:
-        cron: '*/10 * * * * *'
+        cron: '*/3 * * * * *'
         brokenSound: audio/GLASS.WAV
         errorMessage: Build has been broken
         emailFormat: '%s@gmail.com'
