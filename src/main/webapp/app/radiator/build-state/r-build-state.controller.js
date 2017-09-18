@@ -8,16 +8,21 @@
     RBuildStateController.$inject = ['$scope', 'RBuildState'];
 
     function RBuildStateController($scope, RBuildState) {
-        var vm = this;
+        const vm = this;
         vm.buildStates = [];
 
-        RBuildState.loadLastBuildStatuses(buildStates => {
-            const oldBuildStatesIndex = vm.buildStates.findIndex(value => value.instancesName === buildStates.instancesName);
-            if (-1 === oldBuildStatesIndex) {
-                vm.buildStates.push(buildStates);
-            } else {
-                vm.buildStates[oldBuildStatesIndex] = buildStates;
-            }
-        });
+        vm.loadData = loadData;
+
+        RBuildState.loadLastBuildStatuses(promise => promise.then(vm.loadData));
+
+
+        function loadData(data) {
+          const oldBuildStatesIndex = vm.buildStates.findIndex(value => value.instancesName === data.instancesName);
+          if (-1 === oldBuildStatesIndex) {
+            vm.buildStates.push(data);
+          } else {
+            vm.buildStates[oldBuildStatesIndex] = data;
+          }
+        }
     }
 })();
