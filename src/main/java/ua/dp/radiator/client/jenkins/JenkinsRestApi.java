@@ -7,11 +7,11 @@ import static java.lang.String.format;
 
 public interface JenkinsRestApi {
 
-	Mono<Integer> loadLastBuildNumber(String url);
+	Mono<Integer> loadLastBuildNumber(Mono<String> baseUrl);
 
-	Mono<Integer> loadLastSuccessfulBuildNumber(String url);
+	Mono<Integer> loadLastSuccessfulBuildNumber(Mono<String> baseUrl);
 
-	Mono<Integer> loadLastFailedBuildNumber(String url);
+	Mono<Integer> loadLastFailedBuildNumber(Mono<String> baseUrl);
 
 	Mono<BuildDetails> loadBuildDetails(String url, Integer buildId);
 }

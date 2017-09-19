@@ -1,6 +1,7 @@
 package ua.dp.radiator.jobs.buildstate;
 
 import org.springframework.stereotype.Component;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ua.dp.radiator.client.jenkins.JenkinsRestApi;
@@ -9,28 +10,32 @@ import ua.dp.radiator.domain.BuildState;
 import ua.dp.radiator.utils.DataTimeUtils;
 
 @Component
-public class BuildStateExecutor {
+public class BuildStateLoader {
 
     protected JenkinsRestApi jenkinsApi;
 
 
-    public BuildStateExecutor(JenkinsRestApi restClient) {
+    public BuildStateLoader(JenkinsRestApi restClient) {
         this.jenkinsApi = restClient;
     }
 
 
-    public Mono<BuildState> loadState(BuildStateInstance instances) {
-        return loadBuildState(instances)
-                .flatMap(buildState -> loadBuildStateDetails(instances, buildState));
+    public Mono<BuildState> loadState(BuildStateInstance instance) {
+        return loadBuildState(instance)
+                .flatMap(buildState -> loadBuildStateDetails(instance, buildState));
     }
 
-    private  Mono<BuildState> loadBuildState(BuildStateInstance instances) {
+    private  Mono<BuildState> loadBuildState(BuildStateInstance instance) {
+
+        Mono<String> configUrl = Mono.just(instance)
+                .map(BuildStateInstance::getConfigUrl);
+
         return Flux.zip(
-                        jenkinsApi.loadLastBuildNumber(instances.configUrl),
-                        jenkinsApi.loadLastSuccessfulBuildNumber(instances.configUrl),
-                        jenkinsApi.loadLastFailedBuildNumber(instances.configUrl))
+                        jenkinsApi.loadLastBuildNumber(configUrl),
+                        jenkinsApi.loadLastSuccessfulBuildNumber(configUrl),
+                        jenkinsApi.loadLastFailedBuildNumber(configUrl))
                 .map(
-                        buildNumbers -> prepareBuildState(instances, buildNumbers.getT1(), buildNumbers.getT2(), buildNumbers.getT3()))
+                        buildNumbers -> prepareBuildState(instance, buildNumbers.getT1(), buildNumbers.getT2(), buildNumbers.getT3()))
                 .last();
     }
 

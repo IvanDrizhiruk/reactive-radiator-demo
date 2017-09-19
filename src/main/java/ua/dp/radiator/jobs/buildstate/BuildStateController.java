@@ -6,20 +6,17 @@ import ua.dp.radiator.config.properties.RadiatorProperties;
 import ua.dp.radiator.domain.BuildState;
 import ua.dp.radiator.repository.BuildStateRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.google.common.base.Predicates.not;
 
 @Component
 public class BuildStateController {
 
-    private BuildStateExecutor executor;
+    private BuildStateLoader executor;
     private BuildStateRepository buildStateRepository;
     private RadiatorProperties properties;
 
     public BuildStateController(
-            BuildStateExecutor executor,
+            BuildStateLoader executor,
             BuildStateRepository buildStateRepository,
             RadiatorProperties properties) {
 
