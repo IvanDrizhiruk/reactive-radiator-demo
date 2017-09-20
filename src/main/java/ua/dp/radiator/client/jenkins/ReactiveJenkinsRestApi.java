@@ -21,9 +21,8 @@ public class ReactiveJenkinsRestApi implements JenkinsRestApi {
 	private WebClient webClient;
 
 
-	public ReactiveJenkinsRestApi(RadiatorProperties properties, WebClient webClient) {
+	public ReactiveJenkinsRestApi(WebClient webClient, RadiatorProperties properties) {
 		this.properties = properties;
-//		this.webClient =  WebClient.create();
 		this.webClient = webClient;
 	}
 

@@ -11,6 +11,8 @@ public class RadiatorDemoApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		//given
+		//when
+		//then
 	}
-
 }
