@@ -27,14 +27,14 @@ public class ReactiveJenkinsRestApiTest {
 				.loadLastBuildNumber(baseUrl);
 
 		//then
-		verify(webClientMock.get()).uri("http://localhost:8080/lastBuild/buildNumber");
-
-
 		StepVerifier.create(actual)
 				.expectNext(7)
 				.expectComplete()
 				.verify();
+
+		verify(webClientMock.get()).uri("http://localhost:8080/lastBuild/buildNumber");
 	}
+
 
 	private RadiatorProperties newProperties() {
 		RadiatorProperties properties = new RadiatorProperties();
