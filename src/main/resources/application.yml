@@ -60,6 +60,7 @@ radiator:
         brokenSound: audio/GLASS.WAV
         errorMessage: Build has been broken
         emailFormat: '%s@gmail.com'
+        requestMaxTimeMilliseconds: 1000
         instances:
             -
                 name: BUILD
