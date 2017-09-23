@@ -7,16 +7,18 @@ import reactor.core.publisher.Mono;
 import ua.dp.radiator.client.jenkins.JenkinsRestApi;
 import ua.dp.radiator.config.properties.RadiatorProperties.BuildStateInstance;
 import ua.dp.radiator.domain.BuildState;
-import ua.dp.radiator.utils.DataTimeUtils;
+import ua.dp.radiator.utils.time.DataTimeUtils;
 
 @Component
 public class BuildStateLoader {
 
-    protected JenkinsRestApi jenkinsApi;
+    private JenkinsRestApi jenkinsApi;
+    private DataTimeUtils dataTime;
 
 
-    public BuildStateLoader(JenkinsRestApi restClient) {
+    public BuildStateLoader(JenkinsRestApi restClient, DataTimeUtils dataTime) {
         this.jenkinsApi = restClient;
+        this.dataTime = dataTime;
     }
 
 
@@ -48,7 +50,7 @@ public class BuildStateLoader {
         buildState.setInstancesName(instance.name);
         buildState.setState(calculateStatus(instance, lastSuccessfulBuild, lastFailedBuild).toString());
         buildState.setBuildId(Math.max(lastSuccessfulBuild,lastFailedBuild));
-        buildState.setExtractingDate(DataTimeUtils.nowZonedDateTime());
+        buildState.setExtractingDate(dataTime.nowZonedDateTime());
         buildState.setBuildInProgress(lastBuild > lastSuccessfulBuild && lastBuild > lastFailedBuild);
 
         return buildState;
