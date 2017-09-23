@@ -1,7 +1,7 @@
 package ua.dp.radiator.jobs.buildstate;
 
 public enum BuildStates {
-    BUILD_FAILED,
+    FAILED,
     CONFIGURATION_FAILED,
     SUCCESS
 }

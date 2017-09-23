@@ -32,6 +32,7 @@ public class BuildStateStreamController {
 	private void  executeTask() {
 		Flux.fromIterable(properties.buildState.instances)
 				.flatMap(buildStateExecutor::loadState)
+				.onErrorReturn(null)
 				.filter(buildState -> lastBuildNumbers.get(buildState.getInstancesName()) != buildState.getBuildId())
 				.doOnNext(buildState -> lastBuildNumbers.put(buildState.getInstancesName(), buildState.getBuildId()))
 				.subscribe(data -> buildStatusesStream.sink().next(data));

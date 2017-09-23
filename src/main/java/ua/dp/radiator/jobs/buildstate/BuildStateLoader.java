@@ -2,6 +2,7 @@ package ua.dp.radiator.jobs.buildstate;
 
 import org.springframework.stereotype.Component;
 
+import org.springframework.web.reactive.function.client.WebClientException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ua.dp.radiator.client.jenkins.JenkinsRestApi;
@@ -34,10 +35,11 @@ public class BuildStateLoader {
 
         return Flux.zip(
                         jenkinsApi.loadLastBuildNumber(configUrl),
-                        jenkinsApi.loadLastSuccessfulBuildNumber(configUrl),
-                        jenkinsApi.loadLastFailedBuildNumber(configUrl))
-                .map(
-                        buildNumbers -> prepareBuildState(instance, buildNumbers.getT1(), buildNumbers.getT2(), buildNumbers.getT3()))
+                        jenkinsApi.loadLastSuccessfulBuildNumber(configUrl)
+                                .onErrorReturn(WebClientException.class, -1),
+                        jenkinsApi.loadLastFailedBuildNumber(configUrl)
+                                .onErrorReturn(WebClientException.class, -1))
+                .map(buildNumbers -> prepareBuildState(instance, buildNumbers.getT1(), buildNumbers.getT2(), buildNumbers.getT3()))
                 .last();
     }
 
@@ -63,7 +65,7 @@ public class BuildStateLoader {
             return BuildStates.CONFIGURATION_FAILED;
         }
 
-        return BuildStates.BUILD_FAILED;
+        return BuildStates.FAILED;
     }
 
     private Mono<BuildState> loadBuildStateDetails(BuildStateInstance instances, BuildState buildState) {
@@ -73,6 +75,7 @@ public class BuildStateLoader {
                     buildState.setLastRunTimestemp(buildDetails.timestamp);
 
                     return buildState;
-                });
+                })
+                .onErrorReturn(buildState);
     }
 }
