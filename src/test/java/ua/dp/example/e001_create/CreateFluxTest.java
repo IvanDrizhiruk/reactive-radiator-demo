@@ -1,18 +1,46 @@
 package ua.dp.example.e001_create;
 
-import org.junit.Test;
-import org.junit.runner.Runner;
-import reactor.core.publisher.Flux;
-import reactor.test.StepVerifier;
-
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.Test;
+
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 /**
  * Created by ivan on 26.08.17.
  */
 public class CreateFluxTest {
+
+    @Test
+    public void emptyFluxShouldBeCreated() {
+        //given
+
+        //when
+        Flux<String> actual = Flux.empty();
+
+        //then
+        StepVerifier.create(actual)
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    public void fluxWithExceptionShouldBeCreated() {
+        //given
+        RuntimeException exception = new RuntimeException("Some unexpected error");
+
+        //when
+        Flux<String> actual = Flux.error(exception);
+
+        //then
+        StepVerifier.create(actual)
+                .expectError(RuntimeException.class)
+                .verify();
+
+    }
 
     @Test
     public void fluxWithElementsShouldBeCreated() {
@@ -108,98 +136,6 @@ public class CreateFluxTest {
     }
 
     @Test
-    public void fluxShoulBeCreated() {
-        //given
-        //when
-        Flux<String> actual = Flux.create(sink -> {
-            EventProcessor.register(
-                    new EventListener<String>() {
-
-                        public void onDataChunk(List<String> chunk) {
-                            for(String s : chunk) {
-                                sink.next(s);
-                            }
-                        }
-
-                        public void processComplete() {
-                            sink.complete();
-                        }
-                    });
-        });
-
-        EventProcessor.run();
-
-        //then
-        StepVerifier.create(actual)
-                .expectNext("Q1")
-                .expectNext("Q2")
-                .expectNext("D1")
-                .expectComplete()
-                .verify();
-    }
-
-    static class EventProcessor {
-        private static EventListener<String> eventListener;
-
-        static void register(EventListener<String> eventListener) {
-
-            EventProcessor.eventListener = eventListener;
-        }
-
-        static void run () {
-            System.out.println("1" + Thread.currentThread());
-
-            new Thread(
-            new Runnable() {
-
-                @Override
-                public void run() {
-                    System.out.println("2" + Thread.currentThread());
-
-                    try {
-                        Thread.sleep(100L);
-                        eventListener.onDataChunk(Arrays.asList("Q1", "Q2"));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        Thread.sleep(100L);
-                        eventListener.onDataChunk(Arrays.asList("D1"));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        Thread.sleep(100L);
-                        eventListener.processComplete();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-    }
-
-    interface EventListener<T> {
-        void onDataChunk(List<T> chunk);
-        void processComplete();
-    }
-
-    @Test
-    public void emptyFluxShouldBeCreated() {
-        //given
-
-        //when
-        Flux<String> actual = Flux.empty();
-
-        //then
-        StepVerifier.create(actual)
-                .expectComplete()
-                .verify();
-    }
-
-    @Test
     public void fluxShouldBeCreatedNoEventsShouldHappend() {
         //given
 
@@ -212,20 +148,6 @@ public class CreateFluxTest {
                 .expectNoEvent(Duration.ofSeconds(1))
                 .thenCancel()
                 .verify();
-    }
-    @Test
-    public void fluxWithExceptionShouldBeCreated() {
-        //given
-        RuntimeException exception = new RuntimeException("Some unexpected error");
-
-        //when
-        Flux<String> actual = Flux.error(exception);
-
-        //then
-        StepVerifier.create(actual)
-                .expectError(RuntimeException.class)
-                .verify();
-
     }
 
 

@@ -20,7 +20,6 @@ public class BuildStateStreamController {
 	private Map<String,Integer> lastBuildNumbers = Maps.newHashMap();
 
 	private DirectProcessor<BuildState> buildStatusesStream = DirectProcessor.create();
-//	private EmitterProcessor<BuildState> buildStatusesStream = EmitterProcessor.<BuildState>builder().bufferSize(3).build();
 
 
 	public BuildStateStreamController(RadiatorProperties properties, BuildStateLoader buildStateExecutor) {

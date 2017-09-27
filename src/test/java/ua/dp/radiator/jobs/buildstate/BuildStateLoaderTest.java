@@ -1,7 +1,16 @@
 package ua.dp.radiator.jobs.buildstate;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import java.time.ZonedDateTime;
+import java.util.concurrent.TimeoutException;
+
 import org.junit.Test;
 import org.springframework.web.reactive.function.client.WebClientException;
+
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ua.dp.radiator.client.jenkins.JenkinsRestApi;
@@ -9,14 +18,6 @@ import ua.dp.radiator.client.jenkins.api.BuildDetails;
 import ua.dp.radiator.config.properties.RadiatorProperties.BuildStateInstance;
 import ua.dp.radiator.domain.BuildState;
 import ua.dp.radiator.utils.time.DataTimeUtils;
-
-import java.time.ZonedDateTime;
-import java.util.concurrent.TimeoutException;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 public class BuildStateLoaderTest {
 
@@ -28,7 +29,6 @@ public class BuildStateLoaderTest {
 				Mono.just(7),
 				Mono.just(4),
 				newBuildDetails(1506141316L));
-
 
 		DataTimeUtils dataTime = mockDataTimeUtils(ZonedDateTime.parse("2017-09-23T08:00:00Z"));
 
@@ -68,7 +68,6 @@ public class BuildStateLoaderTest {
 				Mono.just(7),
 				newBuildDetails(1506141316L));
 
-
 		DataTimeUtils dataTime = mockDataTimeUtils(ZonedDateTime.parse("2017-09-23T08:00:00Z"));
 
 		BuildStateInstance instance = new BuildStateInstance();
@@ -106,7 +105,6 @@ public class BuildStateLoaderTest {
 				Mono.just(7),
 				Mono.error(new WebClientException("ClientResponse has erroneous status code: 404 Not Found")),
 				newBuildDetails(1506141316L));
-
 
 		DataTimeUtils dataTime = mockDataTimeUtils(ZonedDateTime.parse("2017-09-23T08:00:00Z"));
 
@@ -146,7 +144,6 @@ public class BuildStateLoaderTest {
 				Mono.just(7),
 				newBuildDetails(1506141316L));
 
-
 		DataTimeUtils dataTime = mockDataTimeUtils(ZonedDateTime.parse("2017-09-23T08:00:00Z"));
 
 		BuildStateInstance instance = new BuildStateInstance();
@@ -185,7 +182,6 @@ public class BuildStateLoaderTest {
 				Mono.just(7),
 				newBuildDetails(1506141316L));
 
-
 		DataTimeUtils dataTime = mockDataTimeUtils(ZonedDateTime.parse("2017-09-23T08:00:00Z"));
 
 		BuildStateInstance instance = new BuildStateInstance();
@@ -219,7 +215,6 @@ public class BuildStateLoaderTest {
 				Mono.just(7),
 				Mono.just(4),
 				Mono.error(new TimeoutException()));
-
 
 		DataTimeUtils dataTime = mockDataTimeUtils(ZonedDateTime.parse("2017-09-23T08:00:00Z"));
 
