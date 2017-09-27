@@ -19,6 +19,11 @@ cp -r  src/main/webapp/* target/classes/static/
 
 
 
+if [ "$timeout" = true ] ; then
+    echo 'Timeout!!!'
+   	sleep 10
+fi
+
 if [ "$successful" = false ] ; then
     echo 'Something go wrong!!!'
     exit 1

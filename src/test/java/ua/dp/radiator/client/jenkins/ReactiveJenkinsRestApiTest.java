@@ -90,6 +90,9 @@ public class ReactiveJenkinsRestApiTest {
 		properties.buildState.auth = new RadiatorProperties.BuildState.Authorisation();
 		properties.buildState.auth.username = "user";
 		properties.buildState.auth.password = "secret";
+
+		properties.buildState.requestMaxTimeMilliseconds = 1000;
+
 		return properties;
 	}
 

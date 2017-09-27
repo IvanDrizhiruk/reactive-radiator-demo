@@ -2,12 +2,15 @@
      ng-switch="vm.item.state">
   <div ng-bind="vm.item.instancesName"></div>
   <div ng-switch-when="SUCCESS">
-    <img class="buildStateImage" src="resources/images/successes.jpg">
+    <img class="buildStateImage"
+         ng-class="{'blink-image' : vm.item.buildInProgress}"
+         src="resources/images/successes.jpg">
   </div>
-  <div ng-switch-when="BUILD_FAILED">
+  <div ng-switch-when="FAILED">
 
     <img class="buildStateImage"
-         ng-src="resources/images/unknown.jpg"/>
+         ng-class="{'blink-image' : vm.item.buildInProgress}"
+         ng-src="resources/images/error.png"/>
 
     <!--<div class="row" ng-repet="">
 
@@ -22,7 +25,9 @@
     </div>-->
   </div>
   <div ng-switch-when="CONFIGURATION_FAILED">
-    <img class="buildStateImage" src="resources/images/warning.png">
+    <img class="buildStateImage"
+         ng-class="{'blink-image' : vm.item.buildInProgress}"
+         src="resources/images/warning.png">
   </div>
   <div ng-switch-default>Unknowen state {{ vm.item }}</div>
 </div>

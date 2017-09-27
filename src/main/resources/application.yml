@@ -56,11 +56,11 @@ security:
 
 radiator:
     buildState:
-        cron: '*/3 * * * * *'
+        cron: '*/5 * * * * *'
         brokenSound: audio/GLASS.WAV
         errorMessage: Build has been broken
         emailFormat: '%s@gmail.com'
-        requestMaxTimeMilliseconds: 1000
+        requestMaxTimeMilliseconds: 500
         instances:
             -
                 name: BUILD

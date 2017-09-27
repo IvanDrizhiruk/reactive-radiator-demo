@@ -1,11 +1,10 @@
 package ua.dp.radiator.config.properties;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -31,6 +30,7 @@ public class RadiatorProperties {
         public String brokenSound;
         public String errorMessage;
         public String emailFormat;
+        public int requestMaxTimeMilliseconds;
         public final List<BuildStateInstance> instances = new ArrayList<>();
         public Authorisation auth;
 
@@ -76,6 +76,14 @@ public class RadiatorProperties {
 
         public void setAuth(Authorisation auth) {
             this.auth = auth;
+        }
+
+        public int getRequestMaxTimeMilliseconds() {
+            return requestMaxTimeMilliseconds;
+        }
+
+        public void setRequestMaxTimeMilliseconds(int requestMaxTimeMilliseconds) {
+            this.requestMaxTimeMilliseconds = requestMaxTimeMilliseconds;
         }
 
         public static class Authorisation {

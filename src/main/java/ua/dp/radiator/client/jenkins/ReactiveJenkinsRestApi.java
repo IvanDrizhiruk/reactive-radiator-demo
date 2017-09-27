@@ -4,7 +4,6 @@ import java.nio.charset.Charset;
 import java.time.Duration;
 import java.util.Base64;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -21,9 +20,6 @@ public class ReactiveJenkinsRestApi implements JenkinsRestApi {
 
 	private RadiatorProperties properties;
 	private WebClient webClient;
-
-	@Value("radiator.buildState.requestMaxTimeMilliseconds")
-	private int requestMaxTimeMilliseconds = 1000;
 
 
 	public ReactiveJenkinsRestApi(WebClient webClient, RadiatorProperties properties) {
@@ -63,7 +59,7 @@ public class ReactiveJenkinsRestApi implements JenkinsRestApi {
 	private Mono<Integer> loadInteger(String fullUrl) {
 		return load(fullUrl)
 				.bodyToMono(String.class)
-				.timeout(Duration.ofMillis(requestMaxTimeMilliseconds))
+				.timeout(Duration.ofMillis(properties.getBuildState().getRequestMaxTimeMilliseconds()))
 				.log("loadInteger: ")
 				.map(TypeUtils::toIntegerOrNull);
 	}
@@ -73,7 +69,7 @@ public class ReactiveJenkinsRestApi implements JenkinsRestApi {
 	public Mono<BuildDetails> loadBuildDetails(String daseUrl, Integer lastFailedBuild) {
 		return load(daseUrl + "/" + lastFailedBuild + "/api/json")
 				.bodyToMono(BuildDetails.class)
-				.timeout(Duration.ofMillis(requestMaxTimeMilliseconds))
+				.timeout(Duration.ofMillis(properties.getBuildState().getRequestMaxTimeMilliseconds()))
 				.log("loadBuildDetails: ");
 	}
 }
