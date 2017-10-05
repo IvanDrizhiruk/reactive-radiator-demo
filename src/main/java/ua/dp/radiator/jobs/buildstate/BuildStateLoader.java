@@ -1,8 +1,8 @@
 package ua.dp.radiator.jobs.buildstate;
 
 import org.springframework.stereotype.Component;
-
 import org.springframework.web.reactive.function.client.WebClientException;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ua.dp.radiator.client.jenkins.JenkinsRestApi;
@@ -12,7 +12,6 @@ import ua.dp.radiator.utils.time.DataTimeUtils;
 
 @Component
 public class BuildStateLoader {
-
     private JenkinsRestApi jenkinsApi;
     private DataTimeUtils dataTime;
 
@@ -25,7 +24,7 @@ public class BuildStateLoader {
 
     public Mono<BuildState> loadState(BuildStateInstance instance) {
         return loadBuildState(instance)
-                .flatMap(buildState -> loadBuildStateDetails(instance, buildState));
+                .flatMap(buildState -> loadBuildStateDetails(instance, buildState).retry(3));
     }
 
     private  Mono<BuildState> loadBuildState(BuildStateInstance instance) {
@@ -40,7 +39,7 @@ public class BuildStateLoader {
                         jenkinsApi.loadLastFailedBuildNumber(configUrl)
                                 .onErrorReturn(WebClientException.class, -1))
                 .map(buildNumbers -> prepareBuildState(instance, buildNumbers.getT1(), buildNumbers.getT2(), buildNumbers.getT3()))
-                .last();
+                .single();
     }
 
 

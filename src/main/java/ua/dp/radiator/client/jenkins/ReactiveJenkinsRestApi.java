@@ -58,7 +58,8 @@ public class ReactiveJenkinsRestApi implements JenkinsRestApi {
 
 	private Mono<Integer> loadInteger(String fullUrl) {
 		return load(fullUrl)
-				.bodyToMono(String.class)
+				.bodyToFlux(String.class)
+				.single()
 				.timeout(Duration.ofMillis(properties.getBuildState().getRequestMaxTimeMilliseconds()))
 				.log("loadInteger: ")
 				.map(TypeUtils::toIntegerOrNull);
@@ -66,9 +67,10 @@ public class ReactiveJenkinsRestApi implements JenkinsRestApi {
 
 
 
-	public Mono<BuildDetails> loadBuildDetails(String daseUrl, Integer lastFailedBuild) {
-		return load(daseUrl + "/" + lastFailedBuild + "/api/json")
-				.bodyToMono(BuildDetails.class)
+	public Mono<BuildDetails> loadBuildDetails(String daseUrl, Integer buildId) {
+		return load(daseUrl + "/" + buildId + "/api/json")
+				.bodyToFlux(BuildDetails.class)
+				.single()
 				.timeout(Duration.ofMillis(properties.getBuildState().getRequestMaxTimeMilliseconds()))
 				.log("loadBuildDetails: ");
 	}
